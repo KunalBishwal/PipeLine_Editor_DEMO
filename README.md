@@ -1,1 +1,1 @@
-Pipeline editor demo
+## NodeFlux - Pipeline editor demo ##
