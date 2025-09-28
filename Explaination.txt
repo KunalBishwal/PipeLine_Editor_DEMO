@@ -1,0 +1,17 @@
+## What I Did: A Quick Summary
+In simple terms, I started with a basic, raw set of components and transformed them into a polished, dynamic, and interactive frontend application.
+
+In Part 1, I tackled the messy, repetitive code in the nodes folder. Instead of having four different files with similar code for each node, we created a single, smart "template" called BaseNode.js. This is the abstraction. Now, creating new nodes is incredibly fast and clean because BaseNode handles all the common structure, and we just tell it what unique content to put inside.
+
+In Part 2, I gave the application a complete visual makeover. We went from a plain white page to a professional, dark-themed design with an animated background. We organized the layout into a proper application with a header, a collapsible sidebar for the nodes, and a main canvas area. I styled everything from the nodes themselves (with a modern "glass" effect) to the buttons to ensure the entire user experience feels unified and polished.
+
+Finally, in Part 3, I added functionality to the Text Node. I made it so the text area automatically grows as you type, improving visibility. More importantly, I implemented the dynamic variable feature. Now, when a user types {{variable}}, the node intelligently reads the text and creates a new connection handle on the fly, allowing other nodes to plug data directly into the text.
+
+## The Biggest Challenge & How I Solved It
+The most significant challenge I faced was the bug where connecting a line to a newly created dynamic handle on the Text Node would fail. 
+
+The Problem: The issue was a "Race Condition." When you typed {{name}}, the application was trying to do two things at once: 1 update the text in the state, and 2 update the node to add the new handle. Because these were two separate, tiny updates, you could draw the connection line after the text had updated but before the handle was officially registered in the state. React Flow would check its list, not see the handle yet, and declare the connection invalid.
+
+How I Overcame It: I re-architected the logic to perform a single, "atomic" update. We created a new function in our state manager specifically for the Text Node. Now, when you type, this function updates both the text and the handles in the exact same instant. By combining the two operations into one, we eliminated the race condition entirely. There is no longer a small window of time where the state is inconsistent, so the connection now works perfectly every time. This is a much more robust and professional way to handle complex state changes.
+
+In Part 4, wI bridged the gap between the frontend UI and the backend server. I updated the Submit button on the frontend to package all the nodes and edges into a JSON object and send it to a specific backend endpoint. On the backend, we built that endpoint using Python and FastAPI. This endpoint receives the data, calculates the total number of nodes and edges, and most importantly, runs an algorithm to check if the workflow is a valid Directed Acyclic Graph (DAG) by searching for any loops or cycles. Finally, the backend sends a report with its findings back to the frontend, which is then displayed in a user-friendly alert.
